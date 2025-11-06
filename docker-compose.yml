@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  user-client:
+
+    build: .
+    container_name: vteam-user-client
+    ports:
+
+      - "3001:80"

@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  user-client:
+
+    image: rmalm01/vteam-user-client:latest
+
+    container_name: vteam-user-client-prod
+    ports:
+      - "3001:80"
