@@ -1,16 +1,28 @@
-# React + Vite
+# Vteam - User Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Detta är frontend-repot för användargränssnittet. 
+Applikationen är byggd med React och Vite.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Förutsättningar
 
-## React Compiler
+*   [Docker](https://www.docker.com/products/docker-desktop/)
+*   [Git](https://git-scm.com/)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Installation
 
-## Expanding the ESLint configuration
+1.  **Klona repot**
+   
+    git clone git@github.com:ricmal08/vteam-user-client.git
+    cd vteam-user-client
+    
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2.  **Starta med Docker Compose**
+    Detta kommando bygger Docker-imagen och startar containern.
+
+    docker-compose up -d
+
+
+3.  **Öppna applikationen**
+    Applikationen är nu tillgänglig på [http://localhost:3001](http://localhost:3001).
+
