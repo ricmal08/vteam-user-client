@@ -34,7 +34,10 @@ Applikationen är byggd med React och Vite.
 
 * Installerat react-router-dom för navigering
 * Installerat styled-components för att dela upp styling bättre
-* Installerat leaflet react-leaflet @types/leaflet
+* Installerat leaflet react-leaflet @types/leaflet för kartor
+
+mer info leaflet
+https://ujjwaltiwari2.medium.com/a-guide-to-using-openstreetmap-with-react-70932389b8b1
 
 dependencies tillagd i package.json npm install behöver köras på
 nytt.

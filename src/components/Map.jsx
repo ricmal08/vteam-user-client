@@ -29,11 +29,3 @@ const Wrapper = styled.section`
 `;
 
 export default Map
-
-/* export default function Map() {
-  return (
-    <div>
-      <h1>This will be a Map component</h1>
-    </div>
-  );
-} */
