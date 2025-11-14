@@ -54,3 +54,9 @@ Skapat en enklare grundstyling med css modulerat med styled components. I nu
 läget endast en gemensam wrapper för de båda formulären resterande css i respektive komponent.
 
 Skapat file index.js för att samla komponenter för tydligare översikt och snyggare kod vid import.
+
+### API
+
+Skapat kontakt med vårt api på endpunkten /users där en get request används i UserProfile component. En post request sker i registrerings formulär.
+
+För tillfället hämtas endast användare med index 0, och förutsätter att databasen inte är tom.
