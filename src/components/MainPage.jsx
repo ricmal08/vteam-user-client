@@ -9,17 +9,16 @@ Return map and header if user logged in else only header.
 function MainPage({ userStatus }) {
   return (
     <Wrapper>
-        {userStatus === "logged-in" ? (
-          <>
+      {userStatus === "logged-in" ? (
+        <>
           <div className="header"><h1>Tillgängliga cyklar</h1></div>
           <Map />
-          </>
-
-        ) : (
-          <>
+        </>
+      ) : (
+        <>
           <div className="header"><h1>Välkommen</h1></div>
-          </>
-        )}
+        </>
+      )}
     </Wrapper>
   )
 }

@@ -14,6 +14,8 @@ function App() {
     localStorage.getItem("user-status") || "logged-out"
   );
 
+  const [user, setUser] = useState([]);
+
   useEffect(() => {
     localStorage.setItem("user-status", userStatus);
   }, [userStatus]);
@@ -25,7 +27,7 @@ function App() {
     <Routes>
 
     <Route path='/' element={<MainPage userStatus={userStatus}/>} />
-    <Route path='/user' element={<UserProfile />} />
+    <Route path='/user' element={<UserProfile user={user} setUser={setUser}/>} />
     <Route path='/login' element={<LoginPage setUserStatus={setUserStatus}/>} />
     <Route path='/register' element={<RegisterPage/>} />
 

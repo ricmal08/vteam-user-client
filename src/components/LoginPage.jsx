@@ -3,7 +3,6 @@ import Wrapper from '../assets/wrappers/Form';
 
 function LoginPage({ setUserStatus }) {
   const navigate = useNavigate();
-
   /*
   Function to handle user login
   For now only set user-status in localstorage
@@ -11,10 +10,9 @@ function LoginPage({ setUserStatus }) {
   home page
   */
   function handleLogin(event) {
-    event.preventDefault();
-    
-    setUserStatus("logged-in");
-    navigate("/");
+    event.preventDefault();    
+      setUserStatus("logged-in");
+      navigate("/");
   };
 
   /*

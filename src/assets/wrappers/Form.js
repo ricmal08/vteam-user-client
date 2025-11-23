@@ -15,11 +15,9 @@ const Wrapper = styled.section`
   }
   .login-form {
     min-height: 370px;
-    height: 45%;
   }
   .register-form {
     min-height: 570px;
-    height: 70%;
   }
   input {
     box-sizing: border-box;
@@ -30,7 +28,7 @@ const Wrapper = styled.section`
     padding: 2px;
     background-color: #fff;
     border: solid 2px var(--color-shadow);
-    border-radius: 10px;
+    border-radius: 5px;
   }
   .form-button {
     font-size: 1em;
