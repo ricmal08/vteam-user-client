@@ -27,10 +27,10 @@ function LoginPage({ setUserStatus }) {
         <p>Ange den email adressen samt lösenord du använde vid registrering.</p>
 
         <label htmlFor="email">Email</label><br/>
-        <input type="text" name="email" id="email"></input><br/>
+        <input type="email" name="email" id="email"></input><br/>
 
         <label htmlFor="password">Lösenord</label><br/>
-        <input type="text" name="password" id="password"></input><br/>
+        <input type="password" name="password" id="password"></input><br/>
 
         <input className="form-button" type="submit" value="logga in"></input>
       </form>
