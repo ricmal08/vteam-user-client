@@ -56,6 +56,12 @@ const Wrapper = styled.section`
     margin-left: 10%;
     margin-bottom: 5%;
   }
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
 `;
 
 export default Wrapper;
