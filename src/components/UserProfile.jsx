@@ -31,8 +31,7 @@ function UserProfile({user, setUser}) {
     <Wrapper>
       <img src="/images/default-avatar.png" alt="avatar bild"></img>
         <ul>
-          <li>Firstname: {user.name}</li>
-          <li>Lastname: {user.lastname}</li>
+          <li>Email: {user.email}</li>
         </ul>
       </Wrapper>
   )
