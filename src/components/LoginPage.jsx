@@ -18,18 +18,14 @@ function LoginPage({ setUserStatus }) {
     setLoginError("");
     //Calls api to get user by email
     try {
-      console.log("Försöker hämta:", `${api_url}users/${data.email}`);
       const response = await fetch(`${api_url}users/${data.email}`);
 
-       console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
       if (!response.ok) {
         throw new Error("Användaren finns inte! Vänligen registrera dig");
       }
 
       const user = await response.json();
 
-      console.log("User från backend:", user);
       //Check matching email and password
       if (user.password !== data.password) {
         throw new Error("Felaktigt lösenord!");
@@ -43,7 +39,6 @@ function LoginPage({ setUserStatus }) {
       navigate("/");
   
     } catch(error) {
-      console.log("Error message:", error.message);
       setLoginError(error.message);
       console.error(error);
     }
