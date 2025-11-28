@@ -62,7 +62,7 @@ npm install behöver köras på nytt.
 
 Refactorerat så att skapa konto matchar user.schema i backend med endast email och password även om vi ska använda OAuth senare.
 LoginPage använder också react-hook-form. Loggar in genom api endpoint /users/:email, hanterar även errors vid fel lösenord, email med mera. Sparar i localStorage.
-UserProfile fetchar användarens profil med endpoint /users/:email där emailen är sparad i localStorage från tidigare login.
+UserProfile fetchar användarens profil med endpoint /users/:email där emailen är sparad i localStorage från tidigare login. Krävs dock att man skapar ett konto och loggar in alternativt kör scriptet och loggar in med de befintliga användarna.
 
 # feature/zones (kommer i nästa PR)
 
