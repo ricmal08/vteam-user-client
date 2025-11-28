@@ -4,19 +4,36 @@ import styled from 'styled-components';
 
 function UserProfile({user, setUser}) {
   /*
-  Function that gets all the users from the api, sets the
-  first user found as user.
+  Function that fetch the user from api by email from the localstorage.
   */
   async function fetchUser () {
     try {
-      // Fetch all users from api
-      const response = await fetch(`${api_url}users`);
-      const users = await response.json();
-      // Set user as first found
-      setUser(users[0]);
+      // email from localstorage saved while logging in
+      const userEmail = localStorage.getItem("user-email");
+
+      if (!userEmail) {
+        console.log("Ingen användare inloggad!");
+        setUser(null);
+        return;
+      }
+      // Fetch user from api with email
+      const response = await fetch(`${api_url}users/${userEmail}`);
+
+      if (!response.ok) {
+        throw new Error("Kunde inte hämta användare");
+      }
+      const user = await response.json();
+
+      if (!user) {
+        console.log("Användaren hittades inte");
+        setUser(null);
+        return;
+      }
+      console.log(user);
+      setUser(user);
 
       } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching user:", error);
         setUser(null);
       }
   }
