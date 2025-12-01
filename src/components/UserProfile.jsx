@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import api_url from "../url.js";
 import styled from 'styled-components';
 
@@ -45,12 +46,21 @@ function UserProfile({user, setUser}) {
     /*
     Returns profile page with username from api
     */
+   <>
     <Wrapper>
       <img src="/images/default-avatar.png" alt="avatar bild"></img>
         <ul>
           <li>Email: {user.email}</li>
         </ul>
-      </Wrapper>
+    </Wrapper>
+
+    <UserLink>
+      <Link to="/settings">Inställningar</Link>
+    </UserLink>
+    <UserLink>
+      <Link to="/history">Tidigare resor</Link>
+    </UserLink>
+  </>
   )
 }
 
@@ -79,4 +89,21 @@ const Wrapper = styled.section`
     list-style-type: none;
   }
 `;
+
+const UserLink = styled.section`
+  width: 90%;
+  margin: 20px 5%;
+  text-align: right;
+  
+  a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1em;
+    
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+`
 export default UserProfile

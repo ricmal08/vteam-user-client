@@ -30,6 +30,8 @@ function App() {
     <Route path='/user' element={<UserProfile user={user} setUser={setUser}/>} />
     <Route path='/login' element={<LoginPage setUserStatus={setUserStatus}/>} />
     <Route path='/register' element={<RegisterPage/>} />
+    <Route path='/settings' element={<SettingsPage/>} />
+    <Route path='/history' element={<HistoryPage/>} />
 
     </Routes>
     </>
