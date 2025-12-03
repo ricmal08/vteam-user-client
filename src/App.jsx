@@ -6,6 +6,7 @@ import {
   Nav,
   LoginPage,
   RegisterPage,
+  SettingsPage,
 } from './components/index.js';
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
     localStorage.getItem("user-status") || "logged-out"
   );
 
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("user-status", userStatus);
@@ -30,8 +31,8 @@ function App() {
     <Route path='/user' element={<UserProfile user={user} setUser={setUser}/>} />
     <Route path='/login' element={<LoginPage setUserStatus={setUserStatus}/>} />
     <Route path='/register' element={<RegisterPage/>} />
-    <Route path='/settings' element={<SettingsPage/>} />
-    <Route path='/history' element={<HistoryPage/>} />
+    <Route path='/settings' element={<SettingsPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
+    
 
     </Routes>
     </>

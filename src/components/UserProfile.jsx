@@ -39,8 +39,12 @@ function UserProfile({user, setUser}) {
       }
   }
   useEffect(() => {
-    fetchUser();
-  }, []);
+    // Only fetch if no user, trying not to fettch too much to the api
+    if(!user) {
+      fetchUser();
+    }
+    
+  }, [user]);
 
   return (
     /*
@@ -50,7 +54,7 @@ function UserProfile({user, setUser}) {
     <Wrapper>
       <img src="/images/default-avatar.png" alt="avatar bild"></img>
         <ul>
-          <li>Email: {user.email}</li>
+          <li>Email: {user?.email}</li>
         </ul>
     </Wrapper>
 
