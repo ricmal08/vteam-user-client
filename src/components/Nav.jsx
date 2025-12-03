@@ -11,7 +11,9 @@ function Nav({ userStatus, setUserStatus }) {
   home page
   */
   function handleLogout() {
-    setUserStatus("loggged-out")
+    setUserStatus("loggged-out");
+    setUserStatus(null);
+    localStorage.removeItem("user-email");
     navigate("/");
   };
 
