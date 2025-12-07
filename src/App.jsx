@@ -7,6 +7,7 @@ import {
   LoginPage,
   RegisterPage,
   SettingsPage,
+  HistoryPage,
 } from './components/index.js';
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
 
   return (
     <>
-    <Nav userStatus={userStatus} setUserStatus={setUserStatus}/>
+    <Nav userStatus={userStatus} setUserStatus={setUserStatus} setUser={setUser}/>
 
     <Routes>
 
@@ -32,7 +33,7 @@ function App() {
     <Route path='/login' element={<LoginPage setUserStatus={setUserStatus}/>} />
     <Route path='/register' element={<RegisterPage/>} />
     <Route path='/settings' element={<SettingsPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
-    
+    <Route path='/history' element={<HistoryPage user={user} setUser={setUser}/>} />
 
     </Routes>
     </>
