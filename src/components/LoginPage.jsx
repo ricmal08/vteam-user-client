@@ -84,34 +84,37 @@ if (!loginMethod) {
   Returns a login form when loginMethod is 'email' that on submit calls
   for handleLogin
   */
-  return (
-    <Wrapper>
-      <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-        <button type='button' className='back-btn' onClick={() => setLoginMethod(null)}>
-          <MdArrowBackIosNew size={30}/>
-        </button> 
-        <h4>Logga in</h4>
+  if (loginMethod === 'email') {
+    return (
+      <Wrapper>
+        <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+          <button type='button' className='back-btn' onClick={() => setLoginMethod(null)}>
+            <MdArrowBackIosNew size={30}/>
+          </button> 
+          <h4>Logga in</h4>
 
-        <p>Ange den email adressen samt lösenord du använde vid registrering.</p>
+          <p>Ange den email adressen samt lösenord du använde vid registrering.</p>
 
-        {loginError && <p className="error-message">{loginError}</p>}
+          {loginError && <p className="error-message">{loginError}</p>}
 
-        <label htmlFor="email">Email</label><br/>
-        <input type="email"
-          id="email"
-          {...register("email", { required: true })}/><br/>
-          {errors.email && <p className="error-message">Du måste fylla i email.</p>}
+          <label htmlFor="email">Email</label><br/>
+          <input type="email"
+            id="email"
+            {...register("email", { required: true })}/><br/>
+            {errors.email && <p className="error-message">Du måste fylla i email.</p>}
 
-        <label htmlFor="password">Lösenord</label><br/>
-        <input type="password"
-          id="password"
-          {...register("password", { required: true })}/><br/>
-          {errors.password && <p className="error-message">Du måste fylla i lösenord.</p>}
+          <label htmlFor="password">Lösenord</label><br/>
+          <input type="password"
+            id="password"
+            {...register("password", { required: true })}/><br/>
+            {errors.password && <p className="error-message">Du måste fylla i lösenord.</p>}
 
-        <input className="form-button" type="submit" value="logga in"></input>
-      </form>
-    </Wrapper>
-  )
+          <input className="form-button" type="submit" value="logga in"></input>
+        </form>
+      </Wrapper>
+    )
+  }
+  
 }
 
 const LoginWrapper = styled.section`
