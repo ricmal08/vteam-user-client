@@ -13,7 +13,7 @@ function LoginPage({ setUserStatus }) {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState("");
   // UseState to handle different login methods. Enabling dynamic view of the lgoin page
-  const [loginMehtod, setLoginMethod] = useState(null);
+  const [loginMethod, setLoginMethod] = useState(null);
   const {
     register,
     handleSubmit,
@@ -53,7 +53,7 @@ function LoginPage({ setUserStatus }) {
 
 
 // First view to show different options to login
-if (!loginMehtod) {
+if (!loginMethod) {
   return (
     <LoginWrapper>
       <div className="login-form">
@@ -141,7 +141,7 @@ const LoginWrapper = styled.section`
     gap: 12px;
     padding: 18px 16px;
     background-color: #fff;
-    border: 1x solid #d1d1d6;
+    border: 1px solid #d1d1d6;
     border-radius: 10px;
     cursor: pointer;
     margin-bottom: 2rem;
