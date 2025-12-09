@@ -6,3 +6,4 @@ export { default as RegisterPage } from './RegisterPage';
 export { default as Map } from './Map';
 export { default as SettingsPage } from './SettingsPage';
 export { default as HistoryPage } from './HistoryPage';
+export { default as InvoicePage } from './InvoicePage';

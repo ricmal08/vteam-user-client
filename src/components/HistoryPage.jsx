@@ -1,10 +1,10 @@
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import api_url from "../url.js";
 import styled from 'styled-components';
 
 function HistoryPage({user, setUser}) {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     // Save invoices in useState to not over fetch
     const [invoices, setInvoices] = useState(null);
@@ -38,6 +38,11 @@ function HistoryPage({user, setUser}) {
         
     }
 
+    // Used in onClick to navigate to single invoice
+    const handleSingleInvoice = (invoiceId) => {
+        navigate(`/history/invoice/${invoiceId}`);
+    }
+
     useEffect(() => {
         if(user && !invoices) {
           fetchInvoices();
@@ -59,7 +64,8 @@ function HistoryPage({user, setUser}) {
                             </thead>
                             <tbody>
                                 {invoices.map(invoice => (
-                                    <tr key={invoice.userId}>
+                                    <tr key={invoice._id} onClick={() => handleSingleInvoice(invoice._id)}
+                                        className="invoice-link">
                                         <td>
                                             {new Date(invoice.date).toLocaleDateString('sv-SE')} {' '}
                                                 {new Date(invoice.date).toLocaleTimeString('sv-SE', 
@@ -138,6 +144,15 @@ const TableWrapper = styled.section`
 
   tbody tr:nth-child(even) {
     background-color: #dddddd;
+  }
+
+  .invoice-link {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .invoice-link:hover {
+    background-color: #f3f4f6 !important;
   }
 
 `

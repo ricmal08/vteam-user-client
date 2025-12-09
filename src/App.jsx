@@ -8,6 +8,7 @@ import {
   RegisterPage,
   SettingsPage,
   HistoryPage,
+  InvoicePage,
 } from './components/index.js';
 
 function App() {
@@ -33,7 +34,9 @@ function App() {
     <Route path='/login' element={<LoginPage setUserStatus={setUserStatus}/>} />
     <Route path='/register' element={<RegisterPage/>} />
     <Route path='/settings' element={<SettingsPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
-    <Route path='/history' element={<HistoryPage user={user} setUser={setUser}/>} />
+    <Route path='/history' element={<HistoryPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
+    <Route path='/history/invoice/:id' element={<InvoicePage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
+
 
     </Routes>
     </>
