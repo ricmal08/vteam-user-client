@@ -1,6 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { IoLogoGithub } from "react-icons/io";
+import { CiUser } from "react-icons/ci";
+import { MdArrowBackIosNew } from "react-icons/md";
+import styled from 'styled-components';
 import Wrapper from '../assets/wrappers/Form';
 import api_url from "../url.js";
 
@@ -8,6 +12,8 @@ import api_url from "../url.js";
 function LoginPage({ setUserStatus }) {
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState("");
+  // UseState to handle different login methods. Enabling dynamic view of the lgoin page
+  const [loginMehtod, setLoginMethod] = useState(null);
   const {
     register,
     handleSubmit,
@@ -44,13 +50,46 @@ function LoginPage({ setUserStatus }) {
     }
   }
 
+
+
+// First view to show different options to login
+if (!loginMehtod) {
+  return (
+    <LoginWrapper>
+      <div className="login-form">
+        <h4>Logga in på Rullverket</h4>
+        <button type='button' className='button-option' onClick={() => setLoginMethod('email')}>
+          <CiUser size={20}/> Använd E-post
+        </button>
+
+        <button type='button' className='button-option'>
+          <IoLogoGithub size={20}/> Fortsätt med Github
+        </button>
+      </div>
+
+      <div className='formalia'>
+        <p>Genom att fortsätta med ett konto i <strong>Sverige</strong> godkänner du våra <strong>Användningsvillkor</strong> och
+          bekräftar att du läst igenom vår <strong>Sekretesspolicy</strong> och <strong>Cookiepolicy</strong>
+        </p>
+      </div>
+      <div className='create-account'>
+        <button type='button' className='register-btn' onClick={() => navigate('/register')}>
+          Har du inte ett konto? <span className='register'>Registrera dig</span>
+        </button>
+      </div>
+    </LoginWrapper>
+  )
+}
   /*
-  Returns a login form that on submit calls
+  Returns a login form when loginMethod is 'email' that on submit calls
   for handleLogin
   */
   return (
     <Wrapper>
       <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+        <button type='button' className='back-btn' onClick={() => setLoginMethod(null)}>
+          <MdArrowBackIosNew size={30}/>
+        </button> 
         <h4>Logga in</h4>
 
         <p>Ange den email adressen samt lösenord du använde vid registrering.</p>
@@ -74,5 +113,66 @@ function LoginPage({ setUserStatus }) {
     </Wrapper>
   )
 }
+
+const LoginWrapper = styled.section`
+  margin: 0 auto;
+  margin-top: 1rem;
+  max-width: 500px;
+  width: 90%;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;  
+  background-color: #fff;
+  padding: 30px 20px;
+
+  h4 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .login-form {
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .button-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 18px 16px;
+    background-color: #fff;
+    border: 1x solid #d1d1d6;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 2rem;
+  }
+  .formalia {
+    p {
+      font-size: 12px;
+      text-align: center;
+      padding: 10px;
+    }
+  }
+  .create-account {
+    margin-top: 1rem;
+    background-color: #ccc;
+    border-top: 1px solid #ccd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    margin: 2rem -20px -30px -20px;
+  }
+  .register-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .register {
+    color: #fc1b3dff;
+    font-weight: 600;
+  }
+`;
 
 export default LoginPage
