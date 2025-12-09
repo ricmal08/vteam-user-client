@@ -56,6 +56,27 @@ const Wrapper = styled.section`
     margin-left: 10%;
     margin-bottom: 5%;
   }
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  .delete-btn {
+    background-color: #dc3545;
+    color: white; /* vit text */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
 `;
 
 export default Wrapper;

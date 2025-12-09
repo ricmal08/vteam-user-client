@@ -1,72 +1,62 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import api_url from "../url.js";
 import Wrapper from '../assets/wrappers/Form';
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [lastname, setLastname] = useState("");
-  /*
-  Function to handle user creation for now creates
-  a new user only using name and lastname, calls
-  the api that stores it in database.
-  */
-  async function handleRegister(event) {
-    event.preventDefault();
-    //Check if name and lastname is filled in form
-    if (!name || !lastname) {
-      console.log("Du måste fylla i namn");
-    } else {
-      //Calls api to insert new user
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  
+  async function onSubmit(data) {
+    //Calls api to insert new user, validation is in register()
+    try {
       const response = await fetch(`${api_url}users`, {
         method : "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, lastname })
+        body: JSON.stringify(data)
       });
       if (!response.ok) {
-        console.log("Registrering misslyckades");
-        return;
+        throw new Error("Registrering misslyckades");
       }
+
       console.log("Tack för att du skapat ett konto hos oss!")
-      //Navigate to login page if creation success
-      navigate("/login");
-      }
-  };
+        //Navigate to login page if creation success
+        navigate("/login");
+
+    } catch(error) {
+      console.error(error);
+    }
+  }
 
   return (
     /*
-    Returns a login form that on submit calls
-    for handleRegister
+    Returns a login form that on submit calls handleSubmit from react-hook-form
     */
     <Wrapper>
-      <form className="register-form" onSubmit={handleRegister}>
+      <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
         <h4>Skapa konto</h4>
 
         <p>Genom att skapa ett konto accepterar du vårt avtal</p>
 
-        <label htmlFor="firstname">Förnamn</label><br/>
-        <input type="text" name="firstname" id="firstname" value={name} onChange={e => setName(e.target.value)}/><br/>
-
-        <label htmlFor="lastname">Efternamn</label><br/>
-        <input type="text" name="lastname" id="lastname" value={lastname} onChange={e => setLastname(e.target.value)}/><br/>
-
-        <label htmlFor="adress">Gatuadress</label><br/>
-        <input type="text" name="adress" id="adress"></input><br/>
-
-        <label htmlFor="city">Stad</label><br/>
-        <input type="text" name="city" id="city"></input><br/>
-
-        <label htmlFor="city">Postnummer</label><br/>
-        <input type="text" name="zip-code" id="zip-code"></input><br/>
-
         <label htmlFor="email">Email</label><br/>
-        <input type="text" name="email" id="email"></input><br/>
+        <input
+          type='email'
+          id='email'
+         {...register("email", { required: true })} /><br/>
+        {errors.email && <p className="error-message">Du måste fylla i Email.</p>}
 
         <label htmlFor="password">Lösenord</label><br/>
-        <input type="password" name="password" id="password"></input><br/>
+        <input
+          type='password'
+          id='password'
+         {...register("password", { required: true })} /><br/>
+        {errors.password && <p className="error-message">Du måste fylla i lösenord.</p>}
 
-        <input className="form-button" type="submit" value="Skapa konto"></input>
+        <input className="form-button" type="submit" value="Skapa konto" />
       </form>
     </Wrapper>
   )
