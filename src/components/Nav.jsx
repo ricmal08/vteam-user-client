@@ -33,7 +33,6 @@ function Nav({ userStatus, setUserStatus }) {
         ) : (
           <>
             <Link className="nav-button" to='/login'>Logga in</Link>
-            <Link className="nav-button" to='/register'>Skapa konto</Link>
           </>
         )}    
     </Wrapper>
