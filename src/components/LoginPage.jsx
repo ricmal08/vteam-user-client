@@ -50,6 +50,9 @@ function LoginPage({ setUserStatus }) {
     }
   }
 
+  const handleGithubLogin = () => {
+    window.location.href = `${api_url}auth/login/github`;
+  }
 
 
 // First view to show different options to login
@@ -62,7 +65,7 @@ if (!loginMethod) {
           <CiUser size={20}/> Använd E-post
         </button>
 
-        <button type='button' className='button-option'>
+        <button type='button' className='button-option' onClick={handleGithubLogin}>
           <IoLogoGithub size={20}/> Fortsätt med Github
         </button>
       </div>
