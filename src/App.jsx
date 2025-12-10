@@ -9,6 +9,7 @@ import {
   SettingsPage,
   HistoryPage,
   InvoicePage,
+  GithubCallback,
 } from './components/index.js';
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
     <Route path='/settings' element={<SettingsPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
     <Route path='/history' element={<HistoryPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
     <Route path='/history/invoice/:id' element={<InvoicePage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
+    <Route path='/auth/github/callback' element={<GithubCallback setUserStatus={setUserStatus}/>} />
 
 
     </Routes>
