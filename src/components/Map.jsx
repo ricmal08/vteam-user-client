@@ -7,7 +7,7 @@ import api_url from '../url';
 // TODO
 // fler färger för olika typer av zoner
 // Color for the zone
-const greenOption = { color: 'green' };
+const greenOption = { color: '#c8fac8', fillOpacity: 0.2 };
 
 /*
 Renders a map using openstreetmap
