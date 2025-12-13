@@ -38,7 +38,7 @@ function RegisterPage() {
     Returns a login form that on submit calls handleSubmit from react-hook-form
     */
     <Wrapper>
-      <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
+      <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
         <button type='button' className='back-btn' onClick={() => navigate("/login")}>
           <MdArrowBackIosNew size={30}/>
         </button>
