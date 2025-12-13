@@ -66,8 +66,12 @@ UserProfile fetchar användarens profil med endpoint /users/:email där emailen 
 
 Lagt till en HistoryPage som innehåller en tabell med tidigare resor/fakturor där man kan klicka sig vidare på faktura för att då komma till InvoicePage där mer detaljer visas.
 
-# feature/zones (kommer i nästa PR)
+# feature/cities
 
-## Viktigt! Kör script i backend innan!
+## Kör script för populate cities innan ni testar
 
-Hämtar stockholms zonen från scriptet. Använder en useState med array för att i framtiden kunna hantera flera zoner. Kolla gärna i console loggen för att se vad som skickas med vid fetch. Var viktigt att förstå hur GeoJson skickar en polygon med flera 'ringar' för att hämta och hantera rätt index i coordinates arrayen. Tvungen att ändra ordningen på koordinaterna som skickas från backend då GeoJson skickar longitude, latitude medans react-leaflet hanteras med latidude, longitude ordningen. Grön färg för att visa tillåten körning. Väldigt simpelt än sålänge.
+Hämtar cities, vi behöver komma överens hur stad väljs för användaren. Just nu hårdkodas den med den första från arrayen (sthlm). Därefter hämtas zonerna för staden med cityId. Just nu bara en zon och en typ av zon men den ritas ut på kartan.
+
+# feature/bikes (senare PR)
+
+Hämtar alla bikes som tillhör city och sparar i en useState. Filtrerar dom som inte är inUse för att visa dom på kartan med en markör. Typ av ikon kan ändras, smaksak.
