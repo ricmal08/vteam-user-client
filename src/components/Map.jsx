@@ -1,5 +1,6 @@
-import { MapContainer, TileLayer, Polygon } from 'react-leaflet'
+import { MapContainer, TileLayer, Polygon, Marker } from 'react-leaflet'
 import { useEffect, useState } from "react";
+import L from "leaflet";
 import styled from 'styled-components';
 import api_url from '../url';
 
@@ -105,28 +106,41 @@ function Map() {
     }
   }, [userCity]);
 
+const BikeIcon = L.icon({
+  iconUrl: 'images/scooter.png',
+  iconSize: [40, 40]
+})
+
 // TODO
 // Dynamiskt centrera kartan efter användarens position
   return (
-    <Wrapper>
-      <MapContainer center={[59.3293, 18.0686]} zoom={13} scrollWheelZoom={true}>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-      {/* write the zone, need to flip the positions to lat long due to GeoJson sends long lat */}
-      {zones.map((zone) => (
-        <Polygon
-          key={zone._id}
-          // Map coordinates to be able to flip them, check console.log to see the array when fetching
-          positions={zone.area.coordinates[0].map(coord => [coord[1], coord[0]])}
-          // Set the color with the variabel
-          pathOptions={greenOption}
-        />
-
-      ))}
-      </MapContainer>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <MapContainer center={[59.3293, 18.0686]} zoom={13} scrollWheelZoom={true}>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        {/* write the zone, need to flip the positions to lat long due to GeoJson sends long lat */}
+        {zones.map((zone) => (
+          <Polygon
+            key={zone._id}
+            // Map coordinates to be able to flip them, check console.log to see the array when fetching
+            positions={zone.area.coordinates[0].map(coord => [coord[1], coord[0]])}
+            // Set the color with the variabel
+            pathOptions={greenOption}
+          />
+        ))}
+        {/* Available bikes */}
+        {bikes.filter(bike => !bike.inUse)
+          .map((bike) => (
+            <Marker key={bike._id}
+              position={[bike.position.latitude, bike.position.longitude]}
+              icon={BikeIcon}></Marker>
+          ))}
+        </MapContainer>
+      </Wrapper>
+    </>
   )
 }
 
