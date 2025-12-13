@@ -7,6 +7,18 @@ import {
 Return map and header if user logged in else only header.
 */
 function MainPage({ userStatus }) {
+  const token = localStorage.getItem("accessToken");
+  console.log("token from home")
+
+  fetch("http://localhost:3000/api/auth/token/check", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+    },
+  })
+    .then(res => res.json())
+    .then(data => console.log("TOKEN CHECK RESULT:", data));
+
   return (
     <Wrapper>
       {userStatus === "logged-in" ? (
