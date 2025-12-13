@@ -18,6 +18,8 @@ function Map() {
 
   // Array with zones for future with more zones
   const [zones, setZones] = useState([]);
+
+  const [bikes, setBikes] = useState([]);
   
 
   // Fetch cities from api
@@ -57,14 +59,38 @@ function Map() {
         throw new Error("Kunde inte hämta zoner i staden", errorData);
       }
 
-      const zones = await response.json();
-      console.log('zone:', zones);
+      const cityZones = await response.json();
+      console.log('zone:', cityZones);
 
-      setZones(zones);
+      setZones(cityZones);
 
     } catch (error) {
       console.error("Error while fetching zones:", error);
     }
+    
+  }
+
+  // Fetch bikes in the city choosen by user
+  async function fetchCityBikes(cityId) {
+    try {
+      const response = await fetch(`${api_url}cities/${cityId}/bikes`);
+
+      console.log('response:', response.ok);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error("Kunde inte hämta bikes i staden", errorData);
+      }
+
+      const cityBikes = await response.json();
+      console.log("Bikes: ", cityBikes);
+
+      setBikes(cityBikes);
+
+    } catch (error) {
+      console.error("Error fetching av bikes", error);
+    }
+
     
   }
 
@@ -75,6 +101,7 @@ function Map() {
   useEffect(() => {
     if (userCity) {
       fetchCityZones(userCity._id);
+      fetchCityBikes(userCity._id);
     }
   }, [userCity]);
 
