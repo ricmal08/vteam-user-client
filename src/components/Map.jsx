@@ -1,7 +1,10 @@
 import { MapContainer, TileLayer, Polygon } from 'react-leaflet'
 import { useEffect, useState } from "react";
 import styled from 'styled-components';
+import api_url from '../url';
 
+// TODO
+// fler färger för olika typer av zoner
 // Color for the zone
 const greenOption = { color: 'green' };
 
@@ -9,26 +12,55 @@ const greenOption = { color: 'green' };
 Renders a map using openstreetmap
 */
 function Map() {
+  
+  // usestate för staden som användaren kör i, kanske dropdown meny eller gps??
+  const [userCity, setuserCity] = useState(null);
+
   // Array with zones for future with more zones
   const [zones, setZones] = useState([]);
+  
 
-  // Fetch from api
-  async function fetchZones() {
+  // Fetch cities from api
+  async function fetchCities() {
     try {
-      const response = await fetch("http://localhost:3000/zones/stockholm");
+      const response = await fetch(`${api_url}cities`);
 
       console.log('response:', response.ok);
 
       if (!response.ok) {
-        throw new Error("Kunde inte hämta zoner");
+        const errorData = await response.json();
+        throw new Error("Kunde inte hämta städer", errorData);
       }
 
-      const zone = await response.json();
-      console.log('zone:', zone);
-      console.log('coordinates:', zone.area.coordinates);
-      console.log('coordinates[0]', zone.area.coordinates[0]);
+      const res = await response.json();
+      console.log("cities: ", res);
+      // Hårdkodar med sthlm nu från script
+      setuserCity(res[0]);
 
-      setZones([zone]);
+    } catch (error) {
+      console.log("Fel vid fetch av städer", error);
+
+    }
+    
+  }
+
+
+  // Fetch from zones in city
+  async function fetchCityZones(cityId) {
+    try {
+      const response = await fetch(`${api_url}cities/${cityId}/zones`);
+
+      console.log('response:', response.ok);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error("Kunde inte hämta zoner i staden", errorData);
+      }
+
+      const zones = await response.json();
+      console.log('zone:', zones);
+
+      setZones(zones);
 
     } catch (error) {
       console.error("Error while fetching zones:", error);
@@ -37,9 +69,17 @@ function Map() {
   }
 
   useEffect(() => {
-    fetchZones();
+    fetchCities();
   }, []);
 
+  useEffect(() => {
+    if (userCity) {
+      fetchCityZones(userCity._id);
+    }
+  }, [userCity]);
+
+// TODO
+// Dynamiskt centrera kartan efter användarens position
   return (
     <Wrapper>
       <MapContainer center={[59.3293, 18.0686]} zoom={13} scrollWheelZoom={true}>
