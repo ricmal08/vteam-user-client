@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { MdArrowBackIosNew } from "react-icons/md";
 import api_url from "../url.js";
 import Wrapper from '../assets/wrappers/Form';
 
@@ -38,6 +39,9 @@ function RegisterPage() {
     */
     <Wrapper>
       <form className="register-form" onSubmit={handleSubmit(onSubmit)}>
+        <button type='button' className='back-btn' onClick={() => navigate("/login")}>
+          <MdArrowBackIosNew size={30}/>
+        </button>
         <h4>Skapa konto</h4>
 
         <p>Genom att skapa ett konto accepterar du vårt avtal</p>
