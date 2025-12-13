@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Polygon, Marker } from 'react-leaflet'
+import { MapContainer, TileLayer, Polygon, Marker, Popup } from 'react-leaflet'
 import { useEffect, useState } from "react";
 import L from "leaflet";
 import styled from 'styled-components';
@@ -109,7 +109,8 @@ function Map() {
 const BikeIcon = L.icon({
   iconUrl: 'images/scooter.png',
   iconSize: [40, 40]
-})
+});
+
 
 // TODO
 // Dynamiskt centrera kartan efter användarens position
@@ -136,7 +137,19 @@ const BikeIcon = L.icon({
           .map((bike) => (
             <Marker key={bike._id}
               position={[bike.position.latitude, bike.position.longitude]}
-              icon={BikeIcon}></Marker>
+              icon={BikeIcon}>
+                <StyledPopup>
+                  <div className='info-wrapper'>
+                    <img className='scooter-icon' src="/images/scooter.png" alt="scooter" />
+                    <p className='bike-id'><b>&#8470;</b> {bike._id}</p>
+                  </div>
+                  <div className='button-wrap'>
+                    <button className='start'>Starta åkturen</button>
+                  </div>
+                  <p className='price'><strong>Pris</strong> <br />10kr + 2.50 kr/min</p>
+                </StyledPopup>
+              
+            </Marker>
           ))}
         </MapContainer>
       </Wrapper>
@@ -152,6 +165,42 @@ const Wrapper = styled.section`
     width: 90%;
     margin-left: 5%;
     border-radius: 8px;
+  }
+`;
+
+const StyledPopup = styled(Popup)`
+  .leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    padding: 15px;
+  }
+  .info-wrapper{
+    display: flex;
+    gap: 10px;
+  }
+  .scooter-icon {
+    width: 47px;
+    height: 47px;
+  }
+  .bike-id {
+    font-size: 10px;
+  }
+  .button-wrap {
+    margin-top: 10px;
+    text-align: center;
+  }
+  .start {
+    background-color: #55928c;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+  }
+  .price {
+    text-align: left;
+    border-top: solid 1px #ccc;
+    padding: 10px;
+    font-size: 10px;
   }
 `;
 
