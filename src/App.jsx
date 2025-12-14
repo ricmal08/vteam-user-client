@@ -58,10 +58,10 @@ function App() {
         throw new Error("Kunde inte hämta användaren", userErrorData);
       }
 
-      const user = await userResponse.json();
+      const userData = await userResponse.json();
 
-      console.log(user);
-      setUser(user);
+      console.log(userData);
+      setUser(userData);
 
       } catch (error) {
         console.error("Error fetching user:", error.message);
