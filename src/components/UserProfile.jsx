@@ -1,54 +1,11 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import api_url from "../url.js";
 import styled from 'styled-components';
 
-function UserProfile({user, setUser}) {
-  /*
-  Function that fetch the user from api by email from the localstorage.
-  */
-  async function fetchUser () {
-    try {
-      // email from localstorage saved while logging in
-      const userEmail = localStorage.getItem("user-email");
-
-      if (!userEmail) {
-        console.log("Ingen användare inloggad!");
-        setUser(null);
-        return;
-      }
-      // Fetch user from api with email
-      const response = await fetch(`${api_url}users/${userEmail}`);
-
-      if (!response.ok) {
-        throw new Error("Kunde inte hämta användare");
-      }
-      const user = await response.json();
-
-      if (!user) {
-        console.log("Användaren hittades inte");
-        setUser(null);
-        return;
-      }
-      console.log(user);
-      setUser(user);
-
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        setUser(null);
-      }
-  }
-  useEffect(() => {
-    // Only fetch if no user, trying not to fettch too much to the api
-    if(!user) {
-      fetchUser();
-    }
-    
-  }, [user]);
+function UserProfile({user}) {
 
   return (
     /*
-    Returns profile page with username from api
+    Returns profile page for user
     */
    <>
     <Wrapper>
