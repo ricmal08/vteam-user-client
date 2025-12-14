@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import api_url from "../url.js";
 import styled from 'styled-components';
 
-function HistoryPage({user, setUser}) {
+function HistoryPage() {
     const navigate = useNavigate();
 
     // Save invoices in useState to not over fetch
@@ -12,25 +12,29 @@ function HistoryPage({user, setUser}) {
     // Function that fetch the user invoices
     async function fetchInvoices() {
         try {
-            const userEmail = user.email;
-            if (!userEmail) {
-                console.log("Ingen användare inloggad!");
-                setUser(null);
-                return;
-            }
 
-            // Fetch invoices for user
-            const response = await fetch(`${api_url}users/${userEmail}/invoices`);
-            console.log("respons för invoices: ", response.ok);
+          // Get the token
+          const accessToken = localStorage.getItem("accessToken");
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error("Kunde inte hämta fakturor", errorData);
-            }
+          if (!accessToken) {
+            console.log("ingen token");
+            return;
+          }
 
-            const data = await response.json();
-            console.log("Lyckad hämtning av fakturor: ", data);
-            setInvoices(data);
+          // Fetch invoices for user
+          const response = await fetch(`${api_url}invoices`, {
+            headers: { "Authorozation": `Bearer ${accessToken}` }
+          });
+          console.log("respons för invoices: ", response.ok);
+
+          if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error("Kunde inte hämta fakturor", errorData);
+          }
+
+          const data = await response.json();
+          console.log("Lyckad hämtning av fakturor: ", data);
+          setInvoices(data);
 
         } catch (error) {
             console.error("Fel vid hämtning av fakturor för användaren: ", error);
@@ -44,10 +48,8 @@ function HistoryPage({user, setUser}) {
     }
 
     useEffect(() => {
-        if(user && !invoices) {
-          fetchInvoices();
-        }
-    }, [user, invoices]);
+        fetchInvoices();
+    });
 
     return (
         <>
