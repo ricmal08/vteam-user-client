@@ -1,26 +1,24 @@
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function GithubCallback({ setUserStatus }) {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = new URLSearchParams(window.location.search).get('token');
-        console.log('token: ', token);
+  useEffect(() => {
+    console.log("hej från callback")
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
 
-        if (!token) {
-            navigate('/login');
-            return;
-        }
+    console.log(token)
 
-        localStorage.setItem('access-token', token);
-        setUserStatus('logged-in');
-        navigate('/');
+    if (token) {
+      localStorage.setItem("accessToken", token);
+      setUserStatus("logged-in");
+      navigate("/");
+    } 
+  }, []);
 
-    }, []);
-
-    return <p>Loggar in med GitHub...</p>;
-    
+  return <p>Logging in with GitHub</p>;
 }
 
 export default GithubCallback;
