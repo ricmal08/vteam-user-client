@@ -46,7 +46,6 @@ function LoginPage({ setUserStatus }) {
       setUserStatus("logged-in");
       //Navigate to home page if login success
       navigate("/");
-  
     } catch(error) {
       setLoginError(error.message);
       console.error(error);

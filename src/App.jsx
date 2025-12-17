@@ -27,6 +27,8 @@ function App() {
     try {
       // token from localstorage saved while logging in
       const accessToken = localStorage.getItem("accessToken");
+        console.log("fetchUser startar!");
+
 
       if (!accessToken) {
         console.log("Ingen token tillgänglig!");
@@ -38,6 +40,8 @@ function App() {
         headers: { "Authorization": `Bearer ${accessToken}` }
       });
 
+      console.log("response fetchuserId: ", response.ok, response.status);
+      console.log(response);
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error("Kunde inte hämta token", errorData);
@@ -52,6 +56,7 @@ function App() {
 
       // Fetch user by id
       const userResponse = await fetch(`${api_url}users/${userId}`);
+      console.log("Userresponse: ", response.ok, response.status);
 
       if (!userResponse.ok) {
         const userErrorData = await userResponse.json();
@@ -60,7 +65,7 @@ function App() {
 
       const userData = await userResponse.json();
 
-      console.log(userData);
+      console.log("userData: ", userData);
       setUser(userData);
 
       } catch (error) {
@@ -71,8 +76,10 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
+    console.log("token i app: ", token);
 
     if (token) {
+      console.log("Kör fetchUser!");
       fetchUser();
     }
   }, []);
