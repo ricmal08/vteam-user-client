@@ -23,7 +23,7 @@ function HistoryPage() {
 
           // Fetch invoices for user
           const response = await fetch(`${api_url}invoices`, {
-            headers: { "Authorozation": `Bearer ${accessToken}` }
+            headers: { "Authorization": `Bearer ${accessToken}` }
           });
           console.log("respons för invoices: ", response.ok);
 

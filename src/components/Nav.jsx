@@ -14,6 +14,7 @@ function Nav({ userStatus, setUserStatus, setUser }) {
     setUserStatus("logged-out");
     setUser(null);
     localStorage.removeItem("accessToken");
+    localStorage.clear();
     navigate("/");
   };
 
