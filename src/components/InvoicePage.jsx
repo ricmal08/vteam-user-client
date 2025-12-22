@@ -20,7 +20,9 @@ function InvoicePage() {
             }
 
             // Fetching
-            const response = await fetch(`${api_url}invoices/${id}`);
+            const response = await fetch(`${api_url}invoices/${id}`, {
+                headers: { "Authorization": `Bearer ${accessToken}` }
+            });
             console.log("respons för invoice: ", response.ok);
 
             if (!response.ok) {

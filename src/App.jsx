@@ -74,11 +74,28 @@ function App() {
   }
 
   useEffect(() => {
-    if (userStatus === "logged-in" || userStatus === "updated-user") {
-      fetchUser();
+    // Get the token from github login
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get("token");
+
+    if (urlToken) {
+      localStorage.setItem("accessToken", urlToken);
+      setUserStatus("logged-in");
+      window.history.replaceState({}, '', '/'); // erase the token in the url
     }
     
-  }, [userStatus]);
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      fetchUser();
+    }
+  }, []);
+
+  useEffect(() => {
+  if (userStatus === "logged-in" || userStatus === "updated-user") {
+    fetchUser();
+  }
+}, [userStatus]);
+
 
   return (
     <>

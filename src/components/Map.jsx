@@ -95,6 +95,35 @@ function Map() {
     
   }
 
+  // Start a ride
+  async function startRide(bikeId) {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        alert("Du måste vara inloggad för den här funktionen!");
+        return;
+      }
+
+      const response = await fetch(`${api_url}ride/${bikeId}`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${accessToken}` }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error("Kunde inte starta resan", errorData);
+      }
+
+      const bikeStarted = await response.json();
+      console.log("Resa startad: ", bikeStarted);
+    } catch (error) {
+      console.error("Något gick fel: ", error.message);
+      alert("Gick inte starta resa! Försök igen");
+    }
+    
+  }
+
   useEffect(() => {
     fetchCities();
   }, []);
@@ -144,7 +173,7 @@ const BikeIcon = L.icon({
                     <p className='bike-id'><b>&#8470;</b> {bike._id}</p>
                   </div>
                   <div className='button-wrap'>
-                    <button className='start'>Starta åkturen</button>
+                    <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
                   </div>
                   <p className='price'><strong>Pris</strong> <br />10kr + 2.50 kr/min</p>
                 </StyledPopup>
