@@ -56,7 +56,7 @@ function UserProfile({user}) {
         <Footer>
           <StyledLink to="/settings">Redigera Konto</StyledLink>
           <StyledLink to="/history">Tidigare resor</StyledLink>
-          <StyledLink to="#">Fyll på saldo</StyledLink>
+          <StyledLink to="/deposit">Fyll på saldo</StyledLink>
         </Footer>
 
       </UserWrapper>

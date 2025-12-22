@@ -9,6 +9,7 @@ import {
   SettingsPage,
   HistoryPage,
   InvoicePage,
+  DepositPage,
 } from './components/index.js';
 import api_url from './url.js';
 
@@ -73,8 +74,11 @@ function App() {
   }
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    if (userStatus === "logged-in" || userStatus === "updated-user") {
+      fetchUser();
+    }
+    
+  }, [userStatus]);
 
   return (
     <>
@@ -89,6 +93,7 @@ function App() {
     <Route path='/settings' element={<SettingsPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
     <Route path='/history' element={<HistoryPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
     <Route path='/history/invoice/:id' element={<InvoicePage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
+    <Route path='/deposit' element={<DepositPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
 
 
     </Routes>
