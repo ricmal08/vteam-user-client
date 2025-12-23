@@ -77,6 +77,11 @@ const Wrapper = styled.section`
   .delete-btn:hover {
     background-color: #c82333;
   }
+  .back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
 `;
 
 export default Wrapper;

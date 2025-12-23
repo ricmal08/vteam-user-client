@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 
-function Nav({ userStatus, setUserStatus }) {
+function Nav({ userStatus, setUserStatus, setUser }) {
   const navigate = useNavigate();
 
   /*
@@ -11,9 +11,10 @@ function Nav({ userStatus, setUserStatus }) {
   home page
   */
   function handleLogout() {
-    setUserStatus("loggged-out");
-    setUserStatus(null);
-    localStorage.removeItem("user-email");
+    setUserStatus("logged-out");
+    setUser(null);
+    localStorage.removeItem("accessToken");
+    localStorage.clear();
     navigate("/");
   };
 
@@ -33,7 +34,6 @@ function Nav({ userStatus, setUserStatus }) {
         ) : (
           <>
             <Link className="nav-button" to='/login'>Logga in</Link>
-            <Link className="nav-button" to='/register'>Skapa konto</Link>
           </>
         )}    
     </Wrapper>

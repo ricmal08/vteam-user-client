@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import api_url from "../url.js";
 import styled from 'styled-components';
 
-function InvoicePage({user, setUser}) {
+function InvoicePage() {
     const { id } = useParams();
     const [invoice, setInvoice] = useState(null);
     // Loading state to prevent crashing when compoments rendering before fetching invoice
@@ -12,15 +12,17 @@ function InvoicePage({user, setUser}) {
     // Fetch single invoice
     async function fetchSingleInvoice() {
         try {
-            if (!user) {
+            const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) {
                 console.log("Ingen användare inloggad!");
-                setUser(null);
                 setLoading(false);
                 return;
             }
 
             // Fetching
-            const response = await fetch(`${api_url}invoices/${id}`);
+            const response = await fetch(`${api_url}invoices/${id}`, {
+                headers: { "Authorization": `Bearer ${accessToken}` }
+            });
             console.log("respons för invoice: ", response.ok);
 
             if (!response.ok) {
@@ -41,10 +43,8 @@ function InvoicePage({user, setUser}) {
     }
 
     useEffect(() => {
-        if(user && !invoice) {
-          fetchSingleInvoice();
-        }
-    }, [user, invoice, id]);
+        fetchSingleInvoice();
+    }, [id]);
 
     if (loading) {
         return <LoadingWrapper>Laddar faktura...</LoadingWrapper>;
@@ -74,19 +74,16 @@ function InvoicePage({user, setUser}) {
                             <span>{new Date(invoice.date).toLocaleDateString('sv-SE')}</span>
                         </DetailRow>
                         <DetailRow>
-                            {/** Kommer senare med time i schemat */}
                             <span>Starttid</span>
-                            <span>14.15</span>
+                            <span>{invoice.startTime}</span>
                         </DetailRow>
                         <DetailRow>
-                            {/** Kommer senare med time i schemat */}
                             <span>Sluttid</span>
-                            <span>14.30</span>
+                            <span>{invoice.endTime}</span>
                         </DetailRow>
                         <DetailRow>
-                            {/** Kommer senare med time i schemat */}
                             <span>Totalt tid</span>
-                            <span>15 minuter</span>
+                            <span>{invoice.time}</span>
                         </DetailRow>
                         <DetailRow>
                             <span>Avstånd</span>
