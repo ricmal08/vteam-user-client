@@ -8,7 +8,12 @@ import api_url from '../url';
 // TODO
 // fler färger för olika typer av zoner
 // Color for the zone
-const greenOption = { color: '#c8fac8', fillOpacity: 0.2 };
+const zoneOptions = {
+  city: { color: '#c8fac8', fillOpacity: 0.2 },
+  parking: { color: '#4165e9ff', fillOpacity: 0.2 },
+  invalid: { color: '#da4848ff', fillOpacity: 0.2},
+  default: { color: 'grey', fillOpacity: 0.2 }
+};
 
 
 // A helper function to determine which battery icon to display in the popup
@@ -215,7 +220,7 @@ const BikeIcon = L.icon({
             // Map coordinates to be able to flip them, check console.log to see the array when fetching
             positions={zone.area.coordinates[0].map(coord => [coord[1], coord[0]])}
             // Set the color with the variabel
-            pathOptions={greenOption}
+            pathOptions={zoneOptions[zone.typeOfZone] || zoneOptions.default}
           />
         ))}
         {/* Available bikes or active bike */}
