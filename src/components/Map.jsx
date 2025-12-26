@@ -21,6 +21,8 @@ function Map() {
   const [zones, setZones] = useState([]);
 
   const [bikes, setBikes] = useState([]);
+
+  const [activeRide, setActiveRide] = useState(null);
   
 
   // Fetch cities from api
@@ -117,11 +119,44 @@ function Map() {
 
       const bikeStarted = await response.json();
       console.log("Resa startad: ", bikeStarted);
+      setActiveRide(bikeId);
+      localStorage.setItem("activeRide", bikeId);
     } catch (error) {
       console.error("Något gick fel: ", error.message);
       alert("Gick inte starta resa! Försök igen");
     }
     
+  }
+
+  // End the ride
+  async function endRide(bikeId) {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        alert("Du måste vara inloggad för den här funktionen!");
+        return;
+      }
+
+      const response = await fetch(`${api_url}ride/end/${bikeId}`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${accessToken}` }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error("Kunde inte avsluta resan", errorData);
+      }
+
+      const bikeStarted = await response.json();
+      console.log("Resan avslutad: ", bikeStarted);
+      setActiveRide(null);
+      localStorage.removeItem("activeRide");
+      fetchCityBikes(userCity._id);
+    } catch (error) {
+      console.error("Något gick fel: ", error.message);
+      alert("Gick inte att avsluta resan! Försök igen");
+    }
   }
 
   useEffect(() => {
@@ -134,6 +169,13 @@ function Map() {
       fetchCityBikes(userCity._id);
     }
   }, [userCity]);
+
+  useEffect(() => {
+  const savedRide = localStorage.getItem("activeRide");
+  if (savedRide) {
+    setActiveRide(savedRide);
+  }
+}, []);
 
 const BikeIcon = L.icon({
   iconUrl: 'images/scooter.png',
@@ -161,9 +203,10 @@ const BikeIcon = L.icon({
             pathOptions={greenOption}
           />
         ))}
-        {/* Available bikes */}
-        {bikes.filter(bike => !bike.inUse)
-          .map((bike) => (
+        {/* Available bikes or active bike */}
+        {(activeRide ? bikes.filter(bike => bike._id === activeRide) 
+          : bikes.filter(bike => !bike.inUse)
+          ).map((bike) => (
             <Marker key={bike._id}
               position={[bike.position.latitude, bike.position.longitude]}
               icon={BikeIcon}>
@@ -173,13 +216,17 @@ const BikeIcon = L.icon({
                     <p className='bike-id'><b>&#8470;</b> {bike._id}</p>
                   </div>
                   <div className='button-wrap'>
-                    <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
+                    {activeRide ? <button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
+                      : <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
+                    }
+                    
                   </div>
                   <p className='price'><strong>Pris</strong> <br />10kr + 2.50 kr/min</p>
                 </StyledPopup>
               
             </Marker>
           ))}
+        
         </MapContainer>
       </Wrapper>
     </>
@@ -219,6 +266,14 @@ const StyledPopup = styled(Popup)`
   }
   .start {
     background-color: #55928c;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+  }
+  .end {
+    background-color: #f91a1aff;
     color: #fff;
     cursor: pointer;
     border: none;
