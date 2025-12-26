@@ -1,4 +1,5 @@
 import { MapContainer, TileLayer, Polygon, Marker, Popup } from 'react-leaflet'
+import { FaBatteryFull, FaBatteryThreeQuarters, FaBatteryHalf, FaBatteryQuarter } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import L from "leaflet";
 import styled from 'styled-components';
@@ -8,6 +9,20 @@ import api_url from '../url';
 // fler färger för olika typer av zoner
 // Color for the zone
 const greenOption = { color: '#c8fac8', fillOpacity: 0.2 };
+
+
+// A helper function to determine which battery icon to display in the popup
+function getBatteryIcon(battery) {
+  if (battery === 100) {
+    return <FaBatteryFull size={20}/>;
+  } else if (battery >= 60) {
+    return <FaBatteryThreeQuarters size={20}/>;
+  } else if (battery >= 40) {
+    return <FaBatteryHalf size={20}/>;
+  }
+  return <FaBatteryQuarter size={20}/>;
+
+}
 
 /*
 Renders a map using openstreetmap
@@ -215,6 +230,7 @@ const BikeIcon = L.icon({
                     <img className='scooter-icon' src="/images/scooter.png" alt="scooter" />
                     <p className='bike-id'><b>&#8470;</b> {bike._id}</p>
                   </div>
+                  <p className='battery'>{getBatteryIcon(bike.battery)} {bike.battery}%</p>
                   <div className='button-wrap'>
                     {activeRide ? <button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
                       : <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
@@ -252,6 +268,14 @@ const StyledPopup = styled(Popup)`
   .info-wrapper{
     display: flex;
     gap: 10px;
+  }
+  .battery {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+    justify-content: center;
   }
   .scooter-icon {
     width: 47px;
