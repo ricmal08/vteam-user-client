@@ -4,7 +4,6 @@ import { useState } from "react";
 export function useGeolocation() {
     const [error, setError] = useState(null);
     const [position, setPosition] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
 
     function getPosition() {
         if (!navigator.geolocation) {
@@ -12,11 +11,9 @@ export function useGeolocation() {
 
         }
 
-        setIsLoading(true);
 
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                setIsLoading(false);
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
                 setPosition({ lat: latitude, lon: longitude });
@@ -24,11 +21,10 @@ export function useGeolocation() {
             
             }, 
             (error) => {
-                setIsLoading(false);
                 setError(error.message);
             }
         );
     }
 
-    return {position, getPosition, error, isLoading};
+    return {position, getPosition, error};
 }
