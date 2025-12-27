@@ -3,6 +3,7 @@ import { FaBatteryFull, FaBatteryThreeQuarters, FaBatteryHalf, FaBatteryQuarter 
 import { useEffect, useState } from "react";
 import L from "leaflet";
 import styled from 'styled-components';
+import getCoordinates from '../helpers/nominatim';
 import api_url from '../url';
 
 // TODO
@@ -34,8 +35,9 @@ Renders a map using openstreetmap
 */
 function Map() {
   
-  // usestate för staden som användaren kör i, kanske dropdown meny eller gps??
   const [userCity, setuserCity] = useState(null);
+
+  const [cities, setCities] = useState([]);
 
   // Array with zones for future with more zones
   const [zones, setZones] = useState([]);
@@ -43,6 +45,10 @@ function Map() {
   const [bikes, setBikes] = useState([]);
 
   const [activeRide, setActiveRide] = useState(null);
+
+  // const [userLocation, setUserLocation] = useState(null);
+
+  const [cityCoords, setCityCoords] = useState(null);
   
 
   // Fetch cities from api
@@ -59,8 +65,7 @@ function Map() {
 
       const res = await response.json();
       console.log("cities: ", res);
-      // Hårdkodar med sthlm nu från script
-      setuserCity(res[0]);
+      setCities(res);
 
     } catch (error) {
       console.log("Fel vid fetch av städer", error);
@@ -172,7 +177,11 @@ function Map() {
       console.log("Resan avslutad: ", bikeStarted);
       setActiveRide(null);
       localStorage.removeItem("activeRide");
-      fetchCityBikes(userCity._id);
+
+      if (userCity) {
+        fetchCityBikes(userCity._id);
+      }
+      
     } catch (error) {
       console.error("Något gick fel: ", error.message);
       alert("Gick inte att avsluta resan! Försök igen");
@@ -181,21 +190,44 @@ function Map() {
 
   useEffect(() => {
     fetchCities();
-  }, []);
+  
+    const savedRide = localStorage.getItem("activeRide");
+    if (savedRide) {
+      setActiveRide(savedRide);
+    }
 
-  useEffect(() => {
-    if (userCity) {
+    const savedCity = localStorage.getItem("userCity");
+
+    if (savedCity) {
+      setuserCity(JSON.parse(savedCity));
+    }
+}, []);
+
+useEffect(() => {
+  if (userCity) {
       fetchCityZones(userCity._id);
       fetchCityBikes(userCity._id);
-    }
-  }, [userCity]);
-
-  useEffect(() => {
-  const savedRide = localStorage.getItem("activeRide");
-  if (savedRide) {
-    setActiveRide(savedRide);
   }
-}, []);
+  
+  // Get the coordinates from the helper function
+  async function fetchCityCoords() {
+    try {
+      if (userCity) {
+        const res = await getCoordinates(userCity.name);
+        if (!res || res.length === 0) {
+          throw new Error("Kunde inte göra stadsnamn till koordinater");
+        }
+        console.log("coordinates: ", res);
+        setCityCoords({ lat: res[0].lat, lon: res[0].lon });
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Kunde inte hämta koordinater för vald stad");
+    }
+  }
+
+  fetchCityCoords();
+}, [userCity]);
 
 const BikeIcon = L.icon({
   iconUrl: 'images/scooter.png',
@@ -203,12 +235,12 @@ const BikeIcon = L.icon({
 });
 
 
-// TODO
-// Dynamiskt centrera kartan efter användarens position
   return (
     <>
       <Wrapper>
-        <MapContainer center={[59.3293, 18.0686]} zoom={13} scrollWheelZoom={true}>
+        <MapContainer key={cityCoords ? `${cityCoords.lat}-${cityCoords.lon}` : 'no-coords'} 
+          center={cityCoords ? [parseFloat(cityCoords.lat), parseFloat(cityCoords.lon)]: [62.0, 15.0]} 
+          zoom={cityCoords ? 13 : 5} scrollWheelZoom={true}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -247,8 +279,21 @@ const BikeIcon = L.icon({
               
             </Marker>
           ))}
-        
         </MapContainer>
+          <SelectCity>
+            <label htmlFor='select-city'>Välj stad:</label>
+            <select name='city' id='select-city' value={userCity?._id || ""}
+              onChange={(e) => {
+                const city = cities.find(city => city._id === e.target.value);
+                setuserCity(city);
+                localStorage.setItem("userCity", JSON.stringify(city));
+              }
+                }>
+              {cities.map(city => (
+                <option value={city._id} key={city._id}>{city.name}</option>
+              ))}
+            </select>
+          </SelectCity>
       </Wrapper>
     </>
   )
@@ -314,6 +359,19 @@ const StyledPopup = styled(Popup)`
     border-top: solid 1px #ccc;
     padding: 10px;
     font-size: 10px;
+  }
+`;
+
+const SelectCity = styled.section`
+  text-align: center;
+  margin: 20px;
+
+  select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    cursor: pointer;
   }
 `;
 
