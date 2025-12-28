@@ -1,9 +1,11 @@
 import { MapContainer, TileLayer, Polygon, Marker, Popup } from 'react-leaflet'
 import { FaBatteryFull, FaBatteryThreeQuarters, FaBatteryHalf, FaBatteryQuarter } from "react-icons/fa";
+import { TbScanPosition } from "react-icons/tb";
 import { useEffect, useState } from "react";
 import L from "leaflet";
 import styled from 'styled-components';
 import getCoordinates from '../helpers/nominatim';
+import { useGeolocation } from '../helpers/useGeolocation';
 import api_url from '../url';
 
 // TODO
@@ -34,6 +36,12 @@ function getBatteryIcon(battery) {
 Renders a map using openstreetmap
 */
 function Map() {
+
+  // Ref to map to enabling centering of user position
+  const [map, setMap] = useState(null);
+
+  // User location
+  const { position, getPosition } = useGeolocation();
   
   const [userCity, setuserCity] = useState(null);
 
@@ -49,6 +57,20 @@ function Map() {
   // const [userLocation, setUserLocation] = useState(null);
 
   const [cityCoords, setCityCoords] = useState(null);
+
+
+  // function that center the map to user location
+  function handleCenterClick() {
+    if (!position) {
+      alert("Aktivera GPS för att centrera på din position");
+      return;
+    }
+
+    if (map) {
+      map.setView([position.lat, position.lon], 13);
+    } 
+    
+  }
   
 
   // Fetch cities from api
@@ -190,6 +212,8 @@ function Map() {
 
   useEffect(() => {
     fetchCities();
+    getPosition();
+    console.log("Position efter getPosition:", position);
   
     const savedRide = localStorage.getItem("activeRide");
     if (savedRide) {
@@ -234,51 +258,63 @@ const BikeIcon = L.icon({
   iconSize: [40, 40]
 });
 
+const usrGps = L.icon({
+  iconUrl: 'images/pin.png',
+  iconSize: [24, 24]
+});
+console.log("Position just innan render:", position);
 
   return (
     <>
       <Wrapper>
+        <GpsButton className='gps-center' onClick={handleCenterClick}>
+          <TbScanPosition size={40}/>
+        </GpsButton>
         <MapContainer key={cityCoords ? `${cityCoords.lat}-${cityCoords.lon}` : 'no-coords'} 
           center={cityCoords ? [parseFloat(cityCoords.lat), parseFloat(cityCoords.lon)]: [62.0, 15.0]} 
-          zoom={cityCoords ? 13 : 5} scrollWheelZoom={true}>
+          zoom={cityCoords ? 13 : 5} scrollWheelZoom={true} ref={setMap}>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-        {/* write the zone, need to flip the positions to lat long due to GeoJson sends long lat */}
-        {zones.map((zone) => (
-          <Polygon
-            key={zone._id}
-            // Map coordinates to be able to flip them, check console.log to see the array when fetching
-            positions={zone.area.coordinates[0].map(coord => [coord[1], coord[0]])}
-            // Set the color with the variabel
-            pathOptions={zoneOptions[zone.typeOfZone] || zoneOptions.default}
-          />
-        ))}
-        {/* Available bikes or active bike */}
-        {(activeRide ? bikes.filter(bike => bike._id === activeRide) 
-          : bikes.filter(bike => !bike.inUse)
-          ).map((bike) => (
-            <Marker key={bike._id}
-              position={[bike.position.latitude, bike.position.longitude]}
-              icon={BikeIcon}>
-                <StyledPopup>
-                  <div className='info-wrapper'>
-                    <img className='scooter-icon' src="/images/scooter.png" alt="scooter" />
-                    <p className='bike-id'><b>&#8470;</b> {bike._id}</p>
-                  </div>
-                  <p className='battery'>{getBatteryIcon(bike.battery)} {bike.battery}%</p>
-                  <div className='button-wrap'>
-                    {activeRide ? <button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
-                      : <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
-                    }
-                    
-                  </div>
-                  <p className='price'><strong>Pris</strong> <br />10kr + 2.50 kr/min</p>
-                </StyledPopup>
-              
-            </Marker>
+          {/* write the zone, need to flip the positions to lat long due to GeoJson sends long lat */}
+          {zones.map((zone) => (
+            <Polygon
+              key={zone._id}
+              // Map coordinates to be able to flip them, check console.log to see the array when fetching
+              positions={zone.area.coordinates[0].map(coord => [coord[1], coord[0]])}
+              // Set the color with the variabel
+              pathOptions={zoneOptions[zone.typeOfZone] || zoneOptions.default}
+            />
           ))}
+          {/* Available bikes or active bike */}
+          {(activeRide ? bikes.filter(bike => bike._id === activeRide) 
+            : bikes.filter(bike => !bike.inUse)
+            ).map((bike) => (
+              <Marker key={bike._id}
+                position={[bike.position.latitude, bike.position.longitude]}
+                icon={BikeIcon}>
+                  <StyledPopup>
+                    <div className='info-wrapper'>
+                      <img className='scooter-icon' src="/images/scooter.png" alt="scooter" />
+                      <p className='bike-id'><b>&#8470;</b> {bike._id}</p>
+                    </div>
+                    <p className='battery'>{getBatteryIcon(bike.battery)} {bike.battery}%</p>
+                    <div className='button-wrap'>
+                      {activeRide ? <button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
+                        : <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
+                      }
+                      
+                    </div>
+                    <p className='price'><strong>Pris</strong> <br />10kr + 2.50 kr/min</p>
+                  </StyledPopup>
+                
+              </Marker>
+            ))}
+            {/* Is user set gps show pin */}
+            {(position && !activeRide &&(
+              <Marker position={[position.lat, position.lon]} icon={usrGps}></Marker>
+            ))}
         </MapContainer>
           <SelectCity>
             <label htmlFor='select-city'>Välj stad:</label>
@@ -308,6 +344,19 @@ const Wrapper = styled.section`
     margin-left: 5%;
     border-radius: 8px;
   }
+`;
+
+const GpsButton = styled.button`
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  z-index: 1000;
+  padding: 10px;
+  background-color: #55928c;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
 `;
 
 const StyledPopup = styled(Popup)`
