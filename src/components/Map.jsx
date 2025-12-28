@@ -1,4 +1,5 @@
 import { MapContainer, TileLayer, Polygon, Marker, Popup } from 'react-leaflet'
+import { FaBatteryFull, FaBatteryThreeQuarters, FaBatteryHalf, FaBatteryQuarter } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import L from "leaflet";
 import styled from 'styled-components';
@@ -8,6 +9,20 @@ import api_url from '../url';
 // fler färger för olika typer av zoner
 // Color for the zone
 const greenOption = { color: '#c8fac8', fillOpacity: 0.2 };
+
+
+// A helper function to determine which battery icon to display in the popup
+function getBatteryIcon(battery) {
+  if (battery === 100) {
+    return <FaBatteryFull size={20}/>;
+  } else if (battery >= 60) {
+    return <FaBatteryThreeQuarters size={20}/>;
+  } else if (battery >= 40) {
+    return <FaBatteryHalf size={20}/>;
+  }
+  return <FaBatteryQuarter size={20}/>;
+
+}
 
 /*
 Renders a map using openstreetmap
@@ -21,6 +36,8 @@ function Map() {
   const [zones, setZones] = useState([]);
 
   const [bikes, setBikes] = useState([]);
+
+  const [activeRide, setActiveRide] = useState(null);
   
 
   // Fetch cities from api
@@ -117,11 +134,44 @@ function Map() {
 
       const bikeStarted = await response.json();
       console.log("Resa startad: ", bikeStarted);
+      setActiveRide(bikeId);
+      localStorage.setItem("activeRide", bikeId);
     } catch (error) {
       console.error("Något gick fel: ", error.message);
       alert("Gick inte starta resa! Försök igen");
     }
     
+  }
+
+  // End the ride
+  async function endRide(bikeId) {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        alert("Du måste vara inloggad för den här funktionen!");
+        return;
+      }
+
+      const response = await fetch(`${api_url}ride/end/${bikeId}`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${accessToken}` }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error("Kunde inte avsluta resan", errorData);
+      }
+
+      const bikeStarted = await response.json();
+      console.log("Resan avslutad: ", bikeStarted);
+      setActiveRide(null);
+      localStorage.removeItem("activeRide");
+      fetchCityBikes(userCity._id);
+    } catch (error) {
+      console.error("Något gick fel: ", error.message);
+      alert("Gick inte att avsluta resan! Försök igen");
+    }
   }
 
   useEffect(() => {
@@ -134,6 +184,13 @@ function Map() {
       fetchCityBikes(userCity._id);
     }
   }, [userCity]);
+
+  useEffect(() => {
+  const savedRide = localStorage.getItem("activeRide");
+  if (savedRide) {
+    setActiveRide(savedRide);
+  }
+}, []);
 
 const BikeIcon = L.icon({
   iconUrl: 'images/scooter.png',
@@ -161,9 +218,10 @@ const BikeIcon = L.icon({
             pathOptions={greenOption}
           />
         ))}
-        {/* Available bikes */}
-        {bikes.filter(bike => !bike.inUse)
-          .map((bike) => (
+        {/* Available bikes or active bike */}
+        {(activeRide ? bikes.filter(bike => bike._id === activeRide) 
+          : bikes.filter(bike => !bike.inUse)
+          ).map((bike) => (
             <Marker key={bike._id}
               position={[bike.position.latitude, bike.position.longitude]}
               icon={BikeIcon}>
@@ -172,14 +230,19 @@ const BikeIcon = L.icon({
                     <img className='scooter-icon' src="/images/scooter.png" alt="scooter" />
                     <p className='bike-id'><b>&#8470;</b> {bike._id}</p>
                   </div>
+                  <p className='battery'>{getBatteryIcon(bike.battery)} {bike.battery}%</p>
                   <div className='button-wrap'>
-                    <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
+                    {activeRide ? <button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
+                      : <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
+                    }
+                    
                   </div>
                   <p className='price'><strong>Pris</strong> <br />10kr + 2.50 kr/min</p>
                 </StyledPopup>
               
             </Marker>
           ))}
+        
         </MapContainer>
       </Wrapper>
     </>
@@ -206,6 +269,14 @@ const StyledPopup = styled(Popup)`
     display: flex;
     gap: 10px;
   }
+  .battery {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+    justify-content: center;
+  }
   .scooter-icon {
     width: 47px;
     height: 47px;
@@ -219,6 +290,14 @@ const StyledPopup = styled(Popup)`
   }
   .start {
     background-color: #55928c;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+  }
+  .end {
+    background-color: #f91a1aff;
     color: #fff;
     cursor: pointer;
     border: none;
