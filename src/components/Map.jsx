@@ -262,7 +262,6 @@ const usrGps = L.icon({
   iconUrl: 'images/pin.png',
   iconSize: [24, 24]
 });
-console.log("Position just innan render:", position);
 
   return (
     <>

@@ -5,7 +5,7 @@ import api_url from "../url.js";
 import styled from 'styled-components';
 
 
-function SettingsPage({user, setUser, setUserStatus}) {
+function SettingsPage({user, setUser}) {
     const navigate = useNavigate();
     const {
         register,
@@ -48,7 +48,6 @@ function SettingsPage({user, setUser, setUserStatus}) {
             const updatedUser = await response.json();
             console.log(updatedUser);
             setUser(updatedUser);
-            setUserStatus("updated-user");
             navigate("/user");
 
         } catch (error) {
