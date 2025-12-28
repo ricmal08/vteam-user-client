@@ -91,9 +91,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-  if (userStatus === "logged-in" || userStatus === "updated-user") {
-    fetchUser();
-  }
+    if (userStatus === "logged-in") {
+      fetchUser();
+    }
 }, [userStatus]);
 
 
@@ -107,10 +107,10 @@ function App() {
     <Route path='/user' element={<UserProfile user={user} setUser={setUser}/>} />
     <Route path='/login' element={<LoginPage setUserStatus={setUserStatus}/>} />
     <Route path='/register' element={<RegisterPage/>} />
-    <Route path='/settings' element={<SettingsPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
+    <Route path='/settings' element={<SettingsPage user={user} setUser={setUser}/>} />
     <Route path='/history' element={<HistoryPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
     <Route path='/history/invoice/:id' element={<InvoicePage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
-    <Route path='/deposit' element={<DepositPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
+    <Route path='/deposit' element={<DepositPage user={user} setUser={setUser} fetchUser={fetchUser}/>} />
 
 
     </Routes>

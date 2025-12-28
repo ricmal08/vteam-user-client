@@ -6,10 +6,12 @@ import {
 /*
 Return map and header if user logged in else only header.
 */
-function MainPage({ userStatus }) {
+function MainPage() {
+  const isLoggedIn = !!localStorage.getItem("accessToken");
+
   return (
     <Wrapper>
-      {userStatus === "logged-in" ? (
+      {isLoggedIn ? (
         <>
           <div className="header"><h1>Tillgängliga cyklar</h1></div>
           <Map />
