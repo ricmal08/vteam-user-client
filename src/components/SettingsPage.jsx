@@ -93,8 +93,7 @@ function SettingsPage({user, setUser, setUserStatus}) {
             console.log("Lyckad radering av konto", data);
 
             setUser(null);
-            setUserStatus("logged-out");
-            localStorage.removeItem("user-email");
+            localStorage.clear();
             // Navigate to login page
             navigate("/login");
         } catch (error) {
