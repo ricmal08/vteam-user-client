@@ -132,7 +132,7 @@ function InvoicePage() {
                         </DetailRow>
                         <DetailRow>
                             <span>Belopp</span>
-                            <span>{invoice.amount}kr</span>
+                            <span>{invoice.amount} kr</span>
                         </DetailRow>
                     </InvoiceDetails>
                 </InvoiceWrapper>

@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
+import { FaCheck } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 import api_url from "../url.js";
 import styled from 'styled-components';
 
@@ -50,6 +52,7 @@ function HistoryPage() {
     useEffect(() => {
         fetchInvoices();
     });
+<FaCheck />
 
     return (
         <>
@@ -62,6 +65,7 @@ function HistoryPage() {
                             <thead>
                                 <tr>
                                     <th>Resa</th>
+                                    <th>Betald</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,6 +76,12 @@ function HistoryPage() {
                                             {new Date(invoice.date).toLocaleDateString('sv-SE')} {' '}
                                                 {new Date(invoice.date).toLocaleTimeString('sv-SE', 
                                                     { hour: '2-digit', minute: '2-digit' })}
+                                        </td>
+                                        <td>
+                                          {invoice.paid ? (
+                                            <FaCheck size={30} style={{color: '#10b981'}}/> ) :
+                                            (<IoClose size={30} style={{color: '#c82333'}}/>         
+                                          )}
                                         </td>
                                     </tr>
                                 ))}
@@ -148,6 +158,10 @@ const TableWrapper = styled.section`
     background-color: #dddddd;
   }
 
+  th:last-child,
+  td:last-child {
+    text-align: right;
+  }
   .invoice-link {
     cursor: pointer;
     transition: background-color 0.2s ease;
