@@ -1,10 +1,12 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
+import { MdArrowBackIosNew } from "react-icons/md";
 import api_url from "../url.js";
 import styled from 'styled-components';
 
 function InvoicePage() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [invoice, setInvoice] = useState(null);
     // Loading state to prevent crashing when compoments rendering before fetching invoice
     const [loading, setLoading] = useState(true);
@@ -42,6 +44,40 @@ function InvoicePage() {
         
     }
 
+    // Pay invoice if its unpaid
+    async function payInvoice() {
+        try {
+            const accessToken = localStorage.getItem("accessToken");
+            if (!accessToken) {
+                console.log("Ingen användare inloggad!");
+                setLoading(false);
+                return;
+            }
+
+            const response = await fetch(`${api_url}invoices/${id}/paid`, {
+                method: 'PATCH',
+                headers: { "Authorization": `Bearer ${accessToken}` }
+            });
+
+            console.log("response vid betalning: ", response);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error("Kunde inte betala fakturan", errorData);
+            }
+
+            const data = await response.json();
+            console.log("betalade fakturan: ", data);
+            setInvoice(data);
+
+        } catch (error) {
+            console.error("Fel vid betalning av fakturan: ", error);
+        } finally {
+            setLoading(false);
+        }
+        
+    }
+
     useEffect(() => {
         fetchSingleInvoice();
     }, [id]);
@@ -59,6 +95,9 @@ function InvoicePage() {
         <>
             <PageWrapper>
                 <InvoiceWrapper>
+                    <button type='button' className='back-btn' onClick={() => navigate("/history")}>
+                        <MdArrowBackIosNew size={30}/>
+                    </button>
                     <InvoiceHead>
                         <h1>Faktura detaljer</h1>
                         <p>Din digitala kvittens</p>
@@ -75,15 +114,17 @@ function InvoicePage() {
                         </DetailRow>
                         <DetailRow>
                             <span>Starttid</span>
-                            <span>{invoice.startTime}</span>
+                            <span>{new Date(invoice.startTime).toLocaleTimeString('sv-SE', 
+                                    { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
                         </DetailRow>
                         <DetailRow>
                             <span>Sluttid</span>
-                            <span>{invoice.endTime}</span>
+                            <span>{new Date(invoice.endTime).toLocaleTimeString('sv-SE', 
+                                    { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
                         </DetailRow>
                         <DetailRow>
                             <span>Totalt tid</span>
-                            <span>{invoice.time}</span>
+                            <span>{invoice.time} min</span>
                         </DetailRow>
                         <DetailRow>
                             <span>Avstånd</span>
@@ -95,6 +136,9 @@ function InvoicePage() {
                         </DetailRow>
                     </InvoiceDetails>
                 </InvoiceWrapper>
+                {!invoice.paid && (
+                    <button className='pay-btn' onClick={payInvoice}>Betala fakturan</button>
+                )}
             </PageWrapper>
         </>
     )
@@ -102,6 +146,20 @@ function InvoicePage() {
 
 const PageWrapper = styled.section`
     padding-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+
+    .pay-btn {
+        font-size: 1em;
+        margin-top: 20px;
+        font-weight: 600;
+        padding: 6px 16px;
+        border-radius: 10px;
+        background-color: #10b981;
+        max-width: 500px;
+        margin: 20px auto;
+        cursor: pointer;
+    }
 `;
 
 const LoadingWrapper = styled.div`
@@ -129,7 +187,14 @@ const InvoiceWrapper = styled.section`
     width: 80%;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    overflow: hidden;    
+    overflow: hidden;
+    
+    .back-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        position: absolute;
+    }
 `;
 
 const InvoiceHead = styled.section`
