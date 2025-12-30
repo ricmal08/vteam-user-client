@@ -6,7 +6,7 @@ import api_url from "../url.js";
 import styled from 'styled-components';
 
 
-function DepositPage({user, setUserStatus}) {
+function DepositPage({user, fetchUser}) {
     const navigate = useNavigate();
     const {
         register,
@@ -44,7 +44,7 @@ function DepositPage({user, setUserStatus}) {
 
             const responseData = await response.json();
             console.log(responseData);
-            setUserStatus("updated-user");
+            await fetchUser();
             navigate("/user");
         } catch (error) {
             console.error("Något gick fel!", error);

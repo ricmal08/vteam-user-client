@@ -143,6 +143,7 @@ const Footer = styled.section`
       align-items: center;
       justify-content: center;
       gap: 10px;
+      flex-wrap: wrap;
 `;
 
 const StyledLink = styled(Link)`

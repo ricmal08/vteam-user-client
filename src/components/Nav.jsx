@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import styled from 'styled-components';
 
-function Nav({ userStatus, setUserStatus, setUser }) {
+function Nav({ setUser }) {
   const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem("accessToken");
 
   /*
   Function to handle user logout
@@ -11,9 +12,7 @@ function Nav({ userStatus, setUserStatus, setUser }) {
   home page
   */
   function handleLogout() {
-    setUserStatus("logged-out");
     setUser(null);
-    localStorage.removeItem("accessToken");
     localStorage.clear();
     navigate("/");
   };
@@ -26,7 +25,7 @@ function Nav({ userStatus, setUserStatus, setUser }) {
   return (
     <Wrapper>
       <Link className="nav-button" to="/">Hem</Link>
-        {userStatus === "logged-in" ? (
+        {isLoggedIn ? (
           <>
           <Link className="nav-button" to='/user'>Konto</Link>
           <button onClick={handleLogout} className="nav-button">Logga ut</button>
