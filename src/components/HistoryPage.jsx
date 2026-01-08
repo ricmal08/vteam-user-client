@@ -52,7 +52,6 @@ function HistoryPage() {
     useEffect(() => {
         fetchInvoices();
     });
-<FaCheck />
 
     return (
         <>

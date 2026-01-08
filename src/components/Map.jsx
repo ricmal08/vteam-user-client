@@ -324,6 +324,7 @@ const usrGps = L.icon({
                 localStorage.setItem("userCity", JSON.stringify(city));
               }
                 }>
+              <option value="" disabled>-- Ingen stad vald --</option>
               {cities.map(city => (
                 <option value={city._id} key={city._id}>{city.name}</option>
               ))}
