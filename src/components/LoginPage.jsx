@@ -114,7 +114,7 @@ if (!loginMethod) {
             {...register("password", { required: true })}/><br/>
             {errors.password && <p className="error-message">Du måste fylla i lösenord.</p>}
 
-          <input className="form-button" type="submit" value="logga in"></input>
+          <input className="form-button" type="submit" value="Logga in"></input>
         </form>
       </Wrapper>
     )
