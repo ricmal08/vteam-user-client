@@ -109,7 +109,7 @@ function App() {
     <Route path='/register' element={<RegisterPage/>} />
     <Route path='/settings' element={<SettingsPage user={user} setUser={setUser}/>} />
     <Route path='/history' element={<HistoryPage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
-    <Route path='/history/invoice/:id' element={<InvoicePage user={user} setUser={setUser} setUserStatus={setUserStatus}/>} />
+    <Route path='/history/invoice/:id' element={<InvoicePage user={user} setUser={setUser} setUserStatus={setUserStatus} fetchUser={fetchUser}/>} />
     <Route path='/deposit' element={<DepositPage user={user} setUser={setUser} fetchUser={fetchUser}/>} />
 
 

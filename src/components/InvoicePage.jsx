@@ -4,7 +4,7 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import api_url from "../url.js";
 import styled from 'styled-components';
 
-function InvoicePage() {
+function InvoicePage({fetchUser}) {
     const { id } = useParams();
     const navigate = useNavigate();
     const [invoice, setInvoice] = useState(null);
@@ -35,6 +35,7 @@ function InvoicePage() {
             const data = await response.json();
             console.log("Lyckad hämtning av fakturan: ", data);
             setInvoice(data);
+            console.log(data.distance);
 
         } catch (error) {
             console.error("Fel vid hämtning av enskild faktura: ", error);
@@ -69,6 +70,8 @@ function InvoicePage() {
             const data = await response.json();
             console.log("betalade fakturan: ", data);
             setInvoice(data);
+
+            await fetchUser();
 
         } catch (error) {
             console.error("Fel vid betalning av fakturan: ", error);
