@@ -300,9 +300,11 @@ const usrGps = L.icon({
                     </div>
                     <p className='battery'>{getBatteryIcon(bike.battery)} {bike.battery}%</p>
                     <div className='button-wrap'>
-                      {activeRide ? <button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
-                        : <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
-                      }
+                      {activeRide ? (<button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
+                      ) : bike.blocked ? ( <button className='blocked' disabled>Ej tillgänglig</button> ) 
+                      : ( 
+                        <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
+                      )}
                       
                     </div>
                     <p className='price'><strong>Pris</strong> <br />10kr + 2.50 kr/min</p>
@@ -409,6 +411,16 @@ const StyledPopup = styled(Popup)`
     padding: 10px;
     font-size: 10px;
   }
+  
+  .blocked {
+  background-color: #f91a1aff;
+  color: #fff;
+  cursor: not-allowed;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  opacity: 0.6;
+}
 `;
 
 const SelectCity = styled.section`
