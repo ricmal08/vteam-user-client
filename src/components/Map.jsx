@@ -78,19 +78,16 @@ function Map() {
     try {
       const response = await fetch(`${api_url}cities`);
 
-      console.log('response:', response.ok);
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error("Kunde inte hämta städer", errorData);
       }
 
       const res = await response.json();
-      console.log("cities: ", res);
       setCities(res);
 
     } catch (error) {
-      console.log("Fel vid fetch av städer", error);
+      console.error("Fel vid fetch av städer", error);
 
     }
     
@@ -102,16 +99,12 @@ function Map() {
     try {
       const response = await fetch(`${api_url}cities/${cityId}/zones`);
 
-      console.log('response:', response.ok);
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error("Kunde inte hämta zoner i staden", errorData);
       }
 
       const cityZones = await response.json();
-      console.log('zone:', cityZones);
-
       setZones(cityZones);
 
     } catch (error) {
@@ -125,16 +118,12 @@ function Map() {
     try {
       const response = await fetch(`${api_url}cities/${cityId}/bikes`);
 
-      console.log('response:', response.ok);
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error("Kunde inte hämta bikes i staden", errorData);
       }
 
       const cityBikes = await response.json();
-      console.log("Bikes: ", cityBikes);
-
       setBikes(cityBikes);
 
     } catch (error) {
@@ -164,8 +153,6 @@ function Map() {
         throw new Error("Kunde inte starta resan", errorData);
       }
 
-      const bikeStarted = await response.json();
-      console.log("Resa startad: ", bikeStarted);
       setActiveRide(bikeId);
       localStorage.setItem("activeRide", bikeId);
     } catch (error) {
@@ -195,8 +182,7 @@ function Map() {
         throw new Error("Kunde inte avsluta resan", errorData);
       }
 
-      const bikeStarted = await response.json();
-      console.log("Resan avslutad: ", bikeStarted);
+      
       setActiveRide(null);
       localStorage.removeItem("activeRide");
 
@@ -213,7 +199,6 @@ function Map() {
   useEffect(() => {
     fetchCities();
     getPosition();
-    console.log("Position efter getPosition:", position);
   
     const savedRide = localStorage.getItem("activeRide");
     if (savedRide) {
@@ -241,7 +226,6 @@ useEffect(() => {
         if (!res || res.length === 0) {
           throw new Error("Kunde inte göra stadsnamn till koordinater");
         }
-        console.log("coordinates: ", res);
         setCityCoords({ lat: res[0].lat, lon: res[0].lon });
       }
     } catch (error) {
