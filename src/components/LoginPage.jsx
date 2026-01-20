@@ -53,7 +53,7 @@ function LoginPage({ setUserStatus }) {
   }
 
   const handleGithubLogin = () => {
-    window.location.href = `http://localhost:3002/api/auth/login/github`;
+    window.location.href = `http://localhost:3000/api/auth/login/github`;
   }
 
 
