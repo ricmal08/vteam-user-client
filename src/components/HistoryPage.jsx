@@ -27,7 +27,6 @@ function HistoryPage() {
           const response = await fetch(`${api_url}invoices`, {
             headers: { "Authorization": `Bearer ${accessToken}` }
           });
-          console.log("respons för invoices: ", response.ok);
 
           if (!response.ok) {
               const errorData = await response.json();
@@ -35,7 +34,6 @@ function HistoryPage() {
           }
 
           const data = await response.json();
-          console.log("Lyckad hämtning av fakturor: ", data);
           setInvoices(data);
 
         } catch (error) {
