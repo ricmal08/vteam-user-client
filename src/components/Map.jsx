@@ -299,10 +299,15 @@ const usrGps = L.icon({
                       <p className='bike-id'><b>&#8470;</b> {bike._id}</p>
                     </div>
                     <p className='battery'>{getBatteryIcon(bike.battery)} {bike.battery}%</p>
+                    {bike.battery < 30 && 
+                      <p className='ladda'>Varning! Cykeln behöver laddas!</p>
+                    }
                     <div className='button-wrap'>
-                      {activeRide ? <button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
-                        : <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
-                      }
+                      {activeRide ? (<button className='end' onClick={() => endRide(bike._id)}>Avsluta resan</button>
+                      ) : bike.blocked ? ( <button className='blocked' disabled>Ur service / Ej tillgänglig</button> ) 
+                      : ( 
+                        <button className='start' onClick={() => startRide(bike._id)}>Starta åkturen</button>
+                      )}
                       
                     </div>
                     <p className='price'><strong>Pris</strong> <br />10kr + 2.50 kr/min</p>
@@ -408,6 +413,20 @@ const StyledPopup = styled(Popup)`
     border-top: solid 1px #ccc;
     padding: 10px;
     font-size: 10px;
+  }
+  
+  .blocked {
+  background-color: #f91a1aff;
+  color: #fff;
+  cursor: not-allowed;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  opacity: 0.6;
+}
+  .ladda {
+    text-align: center;
+    color: #f91a1aff;
   }
 `;
 

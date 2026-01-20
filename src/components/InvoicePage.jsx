@@ -130,10 +130,6 @@ function InvoicePage({fetchUser}) {
                             <span>{invoice.time} min</span>
                         </DetailRow>
                         <DetailRow>
-                            <span>Avstånd</span>
-                            <span>{invoice.distance} km</span>
-                        </DetailRow>
-                        <DetailRow>
                             <span>Belopp</span>
                             <span>{invoice.amount} kr</span>
                         </DetailRow>
