@@ -29,8 +29,6 @@ function SettingsPage({user, setUser}) {
                 return;
             }
 
-            console.log("Data som skickas till backend:", data);
-
             const response = await fetch(`${api_url}users`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json",
@@ -43,10 +41,8 @@ function SettingsPage({user, setUser}) {
                 const errorData = await response.json();
                 throw new Error("Misslyckades med uppdatering av konto", errorData.message);
             }
-            console.log("Response patch user: ", response.ok, response.status);
 
             const updatedUser = await response.json();
-            console.log(updatedUser);
             setUser(updatedUser);
             navigate("/user");
 
@@ -87,9 +83,6 @@ function SettingsPage({user, setUser}) {
                 const errorData = await response.json();
                 throw new Error("Kunde inte radera användare", errorData);
             }
-
-            const data = await response.json();
-            console.log("Lyckad radering av konto", data);
 
             setUser(null);
             localStorage.clear();
