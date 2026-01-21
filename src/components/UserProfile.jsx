@@ -4,7 +4,6 @@ import { FaMapPin, FaUser } from "react-icons/fa";
 import styled from 'styled-components';
 
 function UserProfile({user}) {
-  console.log("UserProfile renderas, user:", user);
   
   if (!user) {
     return <p>Laddar användare...Användare hittades inte</p>;

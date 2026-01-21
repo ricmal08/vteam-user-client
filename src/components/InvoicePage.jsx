@@ -25,7 +25,6 @@ function InvoicePage({fetchUser}) {
             const response = await fetch(`${api_url}invoices/${id}`, {
                 headers: { "Authorization": `Bearer ${accessToken}` }
             });
-            console.log("respons för invoice: ", response.ok);
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -33,9 +32,7 @@ function InvoicePage({fetchUser}) {
             }
 
             const data = await response.json();
-            console.log("Lyckad hämtning av fakturan: ", data);
             setInvoice(data);
-            console.log(data.distance);
 
         } catch (error) {
             console.error("Fel vid hämtning av enskild faktura: ", error);
@@ -60,7 +57,6 @@ function InvoicePage({fetchUser}) {
                 headers: { "Authorization": `Bearer ${accessToken}` }
             });
 
-            console.log("response vid betalning: ", response);
 
             if (!response.ok) {
                 const errorData = await response.json();
@@ -68,7 +64,6 @@ function InvoicePage({fetchUser}) {
             }
 
             const data = await response.json();
-            console.log("betalade fakturan: ", data);
             setInvoice(data);
 
             await fetchUser();

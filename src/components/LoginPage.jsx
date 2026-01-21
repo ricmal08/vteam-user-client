@@ -24,14 +24,11 @@ function LoginPage({ setUserStatus }) {
     setLoginError("");
     //Calls api to get user by email
     try {
-      console.log("Datan: ", data);
       const response = await fetch(`${api_url}auth/login/normal`, {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
-
-      console.log("Response status:", response.status);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -40,7 +37,6 @@ function LoginPage({ setUserStatus }) {
 
       const { accessToken } = await response.json();
 
-      console.log(`Token: ${accessToken}`)
       // Save in localStorage
       localStorage.setItem("accessToken", accessToken);
       setUserStatus("logged-in");

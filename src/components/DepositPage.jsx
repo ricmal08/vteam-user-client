@@ -6,7 +6,7 @@ import api_url from "../url.js";
 import styled from 'styled-components';
 
 
-function DepositPage({user, fetchUser}) {
+function DepositPage({fetchUser}) {
     const navigate = useNavigate();
     const {
         register,
@@ -23,9 +23,6 @@ function DepositPage({user, fetchUser}) {
                 return;
             }
 
-            console.log("Innan: ", user.balance);
-
-            console.log('datan som läggs in: ', data);
             // Make the deposit
             const response = await fetch(`${api_url}payments`, {
                 method: "POST",
@@ -39,11 +36,7 @@ function DepositPage({user, fetchUser}) {
                 const errorData = await response.json();
                 throw new Error("Misslyckades göra en insättning", errorData);
             }
-            console.log("Response deposit: ", response.ok, response.status);
 
-
-            const responseData = await response.json();
-            console.log(responseData);
             await fetchUser();
             navigate("/user");
         } catch (error) {

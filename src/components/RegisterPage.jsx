@@ -24,9 +24,8 @@ function RegisterPage() {
         throw new Error("Registrering misslyckades");
       }
 
-      console.log("Tack för att du skapat ett konto hos oss!")
-        //Navigate to login page if creation success
-        navigate("/login");
+      //Navigate to login page if creation success
+      navigate("/login");
 
     } catch(error) {
       console.error(error);

@@ -40,7 +40,6 @@ function App() {
         headers: { "Authorization": `Bearer ${accessToken}` }
       });
 
-      console.log("response fetchuserId: ", response.ok, response.status);
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error("Kunde inte hämta token", errorData);
@@ -55,7 +54,6 @@ function App() {
 
       // Fetch user by id
       const userResponse = await fetch(`${api_url}users/${userId}`);
-      console.log("Userresponse: ", userResponse.ok, userResponse.status);
 
       if (!userResponse.ok) {
         const userErrorData = await userResponse.json();
@@ -63,8 +61,6 @@ function App() {
       }
 
       const userData = await userResponse.json();
-
-      console.log("userData: ", userData);
       setUser(userData);
 
       } catch (error) {
